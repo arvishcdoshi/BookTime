@@ -15,7 +15,7 @@ class ContactForm(forms.Form):
             self.cleaned_data['message'],
         )
         send_mail(
-            'Site message',
+            'Site Message',
             message,
             'site@BookTime.domain',
             ['customerservice@BookTime.domain'],
