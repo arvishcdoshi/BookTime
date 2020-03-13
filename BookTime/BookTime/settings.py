@@ -153,3 +153,18 @@ LOGGING = {
  },
  },
 }
+
+
+if not DEBUG:  # FOR PRODUCTION ENVIRONMENT, WE USE SMTP BACKEND
+    EMAIL_BACKEND = 'django.core.mail.backends.smpt.EmailBackend'
+    EMAIL_HOST_USER = 'username'
+    EMAIL_HOST = 'smpt.domain.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_PASSWORD = 'password'
+
+else:  # FOR DEVELOPMENT ENVIRONMENT, WE USE CONSOLE BACKEND
+    EMAIL_BACKEND = (
+
+        'django.core.mail.backends.console.EmailBackend'
+    )

@@ -1,0 +1,51 @@
+The test suite runs all the tests which is not ideal 
+when we want to have quick feedback on some specific 
+refactoring.
+
+1) To run all the views tests
+   --> python3/python manage.py test main.tests.test_views.TestPage
+
+2) Run the homepage test
+   --> python3/python manage.py test main.tests.test_views.TestPage.test_home_page_works
+
+3) Run all tests 
+   --> python3/python manage.py test 
+
+   ***EXPlANATION OF SOME SNIPPETS OF TEST_FORMS.PY***
+
+
+* For checking number of messages in the box:
+  --> print(len(mail.outbox))
+
+* For grabbing an email and check its contents:
+  --> first_message = mail.outbox[0]
+      print(first_message.subject)
+      print(first_message.body)  
+
+* Some standard methods to interact with forms from the view layer
+  
+  ^ is_clean() :- Runs all validators and clean 
+                  functions,to check everything validates
+                  correctly.
+  ^ errors :- if the form is not valid, this array will
+              contain list of errors.
+
+ #NOTE :- When running the built-in web server, the 'LOGS' 
+          are written to the terminal/console. When running
+          under another web server, Django logs to the server's logs.
+
+ORM(Object Relational Mapper):- 
+--> It consists of wrapping all rows loaded from the database into a series of models.
+    Models are Python objects that have attributes that correspond to columns in  a 
+    database row. 
+     
+    A model has methods to interact with the underlying database row: 
+      save() writes any changes of attributes of the model back into the database.
+      delete() deletes the database row.
+    These models are declared as Python classes first, inheriting from django.db.models.Model  
+
+We need to create the migrations for model file to work. Migrations are special files that
+contain a list of database directives to create tables,add columns, remove them, and so on.
+
+All the data definition language(DDL) commands(those to create and change schemas) are 
+wrapped in Python API that is used in migration files.
