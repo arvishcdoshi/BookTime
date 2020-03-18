@@ -28,6 +28,7 @@ the Product model via a foreign key relationship
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="product-images")
+    thumbnail = models.ImageField(upload_to="product-thumbnails",null=True)
 
 # ForeignKey is a field that stores the Primary key of the linked Product model.
 # Install Pillow(for image functioning) pip3 install pillow  
@@ -48,3 +49,15 @@ class ProductTag(models.Model):
 # "ManyToManyField" automatically creates a linking between two tables, in this case 
 # ProductTag and Products. This linking allows us to create relationships where any tags
 # can be associated to any products and vice-versa.
+
+
+
+
+
+
+
+
+
+
+
+
