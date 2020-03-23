@@ -1,7 +1,10 @@
 from io import BytesIO
 import logging
-import Pillow-Pillow
-from Pillow import Image
+import PIL
+from PIL import Image
+
+
+
 #import Image
 from django.core.files.base import ContentFile
 from django.db.models.signals import pre_save
