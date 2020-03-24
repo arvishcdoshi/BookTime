@@ -82,7 +82,9 @@ DATABASES = {
         'NAME': 'BookTime',
         'USER': 'postgres',
         'PASSWORD': 'arvish1998',
-        'HOST': 'localhost'
+        'HOST': 'localhost',
+        'PORT': '5432',
+        
     }
 }
 

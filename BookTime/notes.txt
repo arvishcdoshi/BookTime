@@ -49,3 +49,15 @@ contain a list of database directives to create tables,add columns, remove them,
 
 All the data definition language(DDL) commands(those to create and change schemas) are 
 wrapped in Python API that is used in migration files.
+
+Database operations such as SELECT and UPDATEs rely on QuerySets and managers.
+A manager is a class responsible for building queries against a model.Every model
+needs to have atleast one managers.
+--> By default, an instance of django.db.models.Manager is connected to every models through
+an attribute in the model called objects.
+-->All standard methods of manager return QuerySets.
+
+*** QuerySets- A queryset is a collection of models loaded from the database.They are
+    constructed and populated by Manager instances.
+    QuerySets also have methods that can be used to further filter the models,
+    They are similar to Python lists
