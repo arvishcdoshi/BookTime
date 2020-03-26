@@ -16,9 +16,22 @@ class ActiveManager(models.Manager):
     def active(self):
         return self.filter(active=True)
 
+
+# While loading data using natural keys, Django cannot use
+# the natural_key() method, because model loading happens 
+# through managers, not models themselves.
+# To be able to load tags back in, we need to create a Manager
+# for that model and implement the get_by_natural_key() method.
+
+class ProductTagManager(models.Manager):
+    def get_by_natural_key(self, slug):
+        return self.get(slug=slug)
+
 class ProductTag(models.Model):
     
     #products = models.ManyToManyField(Product, blank=True)
+    objects = ProductTagManager()
+    
     name = models.CharField(max_length=32)
     slug = models.SlugField(max_length=48)
     description = models.TextField(blank=True)
@@ -75,6 +88,10 @@ the information about the image needs to be in a seperate table that we can link
 the Product model via a foreign key relationship
 '''
 class ProductImage(models.Model):
+    
+     
+    
+    
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="product-images")
     thumbnail = models.ImageField(upload_to="product-thumbnails",null=True)

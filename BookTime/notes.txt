@@ -61,3 +61,51 @@ an attribute in the model called objects.
     constructed and populated by Manager instances.
     QuerySets also have methods that can be used to further filter the models,
     They are similar to Python lists
+
+To enable good string representation for the autocomplete tags, we need to add method,
+to all models.
+
+--> def __str__(self):
+       return self.name
+
+Page 98 - We might get 404's even if the correct image and thumbnail URL's are served,
+to fix that, go to BookTime/urls.py
+--> ...
+from django.conf.urls.static import static
+# add this to end of urlpatterns list
++ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+
+## NUTSHELL ON MANAGEMENT COMMANDS ##
+--> loaddata and dumpdata are very useful as a simple data loading
+mechanism. They are used to bootstrap a database with data from 'fixtures',
+which are simple data files in a format that Django understands.
+Can be JSON or XML. 
+
+Product Tags will be a fixed set and will be managed by developers, and the 
+fixture will be commited by the repository.
+
+DUMPDATA ***
+--> python manage.py dumpdata --indent 2 main.ProductTag
+The output will contain many internal ID's that are specific to a 
+database instance.
+
+To solve this:
++++ - Move ManyToManyField out of tags and into the Product model.
++++ - Make sure the __str__() method for tags is defined.
++++ - Define tags natural_key() method.
+
+After doing first 2 +++ -, as a last step, we will add a method natural_key(),
+which will return the tag natural key. In our case, we use slug as the natural
+key
+
+Now, it is possible to run dumpdata using natural keys instead of
+internal database keys. 
+
+An integer ID isn't always the most convenient way to refer to an object;
+sometimes, a more natural reference would be helpful.
+For this reasons, Django provides concept of Natural Key.
+
+DEFINITION OF A NATURAL KEY:
+--> A natural key is a tuple of values that can be used to 
+uniquely identify an object instance without using the 
+primary key value.
