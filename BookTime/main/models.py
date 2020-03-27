@@ -95,7 +95,7 @@ class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="product-images")
     thumbnail = models.ImageField(upload_to="product-thumbnails",null=True)
-
+    objects = ActiveManager()
 # ForeignKey is a field that stores the Primary key of the linked Product model.
 # Install Pillow(for image functioning) pip3 install pillow  
 
