@@ -4,8 +4,14 @@ from main import forms
 from main import models
 from django.views.generic.list import ListView
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+import logging
+from django.contrib.auth import login,authenticate
+from django.contrib import messages
 # Create your views here.
 
+logger = logging.getLogger(__name__)
 # A CLASS BASED VIEW.
 class ContactUsView(FormView):
     template_name = 'contact_form.html'
@@ -50,4 +56,59 @@ class ProductListView(ListView):
         else:
             products = models.Product.objects.active()
             
-        return products.order_by("name")        
+        return products.order_by("name")  
+      
+# FOR FURTHER FUNCTIONALITY        
+def add_to_basket(request):
+    product = get_object_or_404(
+        models.Product, pk=request.GET.get("product_id")
+    )
+    basket = request.basket
+    if not request.basket:
+        if request.user.is_authenticated:
+            user = request.user
+        else:
+            user = None
+        basket = models.Basket.objects.create(user=user)
+        request.session["basket_id"] = basket.id                
+        
+    basketline,created = models.BasketLine.objects.get_or_create(
+        basket=basket, product=product
+    )   
+    if not created:
+        basketline.quantity += 1
+        basketline.save()
+        
+    return HttpResponseRedirect(
+        reverse("product", args=(product.slug))
+    )    
+
+class SignupView(FormView):
+    template_name = "signup.html"
+    form_class = forms.UserCreationForm
+    
+    def get_success_url(self):
+        redirect_to = self.request.GET.get("next", "/")
+        return redirect_to
+    
+    def form_valid(self,form):
+        response = super().form_valid(form)
+        form.save()    
+        
+        email = form.cleaned_data.get("email")
+        raw_password = form.cleaned_data.get("password1")
+        logger.info(
+            "New Signup for email=%s through SignupView", email
+        )
+        
+        user = authenticate(email=email, password=raw_password)
+        login(self.request,user)
+        
+        form.send_mail()
+        
+        messages.info(
+            self.request, "You signed up Successfully."
+        )
+        
+        return response
+     

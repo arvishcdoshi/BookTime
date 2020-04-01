@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from . import models
+from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+
 # Register your models here.
 
 class ProductAdmin(admin.ModelAdmin):
@@ -9,7 +11,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ('in_stock',)
     search_fields = ('name',)
     prepopulated_fields = {"slug":("name",)}
-    autocomplete_fields = ('tags',)
+    #autocomplete_fields = ('tags',)
     
 admin.site.register(models.Product,ProductAdmin)
 
@@ -39,8 +41,53 @@ class ProductImageAdmin(admin.ModelAdmin):
     
 admin.site.register(models.ProductImage,ProductImageAdmin)    
 
+@admin.register(models.User)
 
-
+class UserAdmin(DjangoUserAdmin):
+    fieldsets = (
+        (None, {"fields": ("email","password")}),
+        (
+            "Personal Info",
+            {"fields": ("first_name", "last_name")},
+        ),
+        
+        (
+            "Permissions",
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                )
+            },
+        ),
+        
+        (
+            "Important Dates",
+            {"fields": ("last_login","date_joined")},
+        ),
+    )
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("email","password1","password2"),
+            },
+        ),
+        
+    )
+    
+    list_display = (
+        "email",
+        "first_name",
+        "last_name",
+        "is_staff",
+    )
+    search_fields = ("email", "first_name", "last_name")
+    ordering = ("email",)
 
 
 

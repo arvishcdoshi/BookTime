@@ -8,7 +8,7 @@ class TestSignal(TestCase):
         product = models.Product(
             name="The cathedral and the bazaar",
             price = Decimal("10.00"),
-        )
+                 )
         product.save()
         
         with open(
@@ -34,3 +34,34 @@ class TestSignal(TestCase):
                   
         image.thumbnail.delete(save=False)
         image.image.delete(save=False)
+        
+        
+    #     product = models.Product(
+    #         name="More money than God",
+    #         price = Decimal("20.00")
+    #    )
+    #     product.save()
+        
+    #     with open(
+    #         "main/fixtures/more-money-than-god.jpg","rb"
+    #     ) as f:
+    #         image=models.ProductImage(
+    #             product=product,
+    #             image=ImageFile(f,name="mmtg.jpg"),
+                
+    #         )
+    #         with self.assertLogs("main",level="INFO") as cm:
+    #             image.save()
+              
+    #     self.assertGreaterEqual(len(cm.output),1)
+    #     image.refresh_from_db()
+        
+    #     with open(
+    #         "main/fixtures/more-money-than-god.thumb.jpg",
+    #         "rb",
+    #     ) as f:
+    #         expected_content = f.read()
+    #         assert image.thumbnail.read() == expected_content
+                  
+    #     image.thumbnail.delete(save=False)
+    #     image.image.delete(save=False)

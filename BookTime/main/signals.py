@@ -35,3 +35,4 @@ def generate_thumbnail(sender,instance,**kwargs):
         save=False,
     )
     temp_thumb.close()
+    

@@ -170,3 +170,5 @@ else:  # FOR DEVELOPMENT ENVIRONMENT, WE USE CONSOLE BACKEND
 
         'django.core.mail.backends.console.EmailBackend'
     )
+AUTH_USER_MODEL = "main.User"    
+    
