@@ -55,7 +55,7 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     
-    #tags = models.ManyToManyField(ProductTag,blank=True)
+    tags = models.ManyToManyField(ProductTag,blank=True)
    # products = models.ManyToManyField(Product, blank=True)       
     name = models.CharField(max_length=32)
     description = models.TextField(blank=True)
