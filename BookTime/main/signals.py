@@ -2,7 +2,8 @@ from io import BytesIO
 import logging
 import PIL
 from PIL import Image
-
+from django.contrib.auth.signals import user_logged_in
+from .models import Basket
 
 
 #import Image
@@ -35,4 +36,5 @@ def generate_thumbnail(sender,instance,**kwargs):
         save=False,
     )
     temp_thumb.close()
-    
+   
+   
