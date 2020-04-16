@@ -4,8 +4,10 @@ from django.contrib.auth.models import (
     BaseUserManager
 )
 
+
 from django.core.validators import MinValueValidator
 # Create your models here.
+
 '''
 class Destination(models.Model):
     name = models.CharField(max_length=100)
@@ -200,13 +202,13 @@ class Basket(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE, blank=True, null=True)
     status = models.IntegerField(choices=STATUSES,default=OPEN)
     objects = ActiveManager()
-   
     
-    # def is_empty(self):       
-    #     return self.basketline_set.all().count() == 0
+    
+    def is_empty(self):       
+        return self.basketline_set.all().count() == 0
          
-    # def count(self):
-    #     return sum(i.quantity for i in self.basketline_set.all())
+    def count(self):
+        return sum(i.quantity for i in self.basketline_set.all())
 
         
 class BasketLine(models.Model):
@@ -214,4 +216,5 @@ class BasketLine(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     
     quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
+    objects = ActiveManager()
     

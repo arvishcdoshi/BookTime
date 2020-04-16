@@ -4,14 +4,14 @@ import PIL
 from PIL import Image
 from django.contrib.auth.signals import user_logged_in
 from .models import Basket
-
+from django.core.exceptions import ObjectDoesNotExist
 
 #import Image
 from django.core.files.base import ContentFile
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from .models import ProductImage
-
+from .models import Basket
 THUMBNAIL_SIZE = (300,300)
 
 logger = logging.getLogger(__name__)
@@ -38,3 +38,28 @@ def generate_thumbnail(sender,instance,**kwargs):
     temp_thumb.close()
    
    
+@receiver(user_logged_in)
+def merge_baskets_if_found(sender,user,request,**kwargs):
+    anonymous_basket = getattr(request,"basket",None)
+    if anonymous_basket:
+        try:
+            loggedin_basket = Basket.objects.get(
+                user=user, status = Basket.OPEN
+            )
+            for line in anonymous_basket.basketline_set.all():
+                line.basket = loggedin_basket
+                line.save()
+                
+            anonymous_basket.delete()
+            request.basket = loggedin_basket
+            logger.info(
+                "Merged basket to id %d", loggedin_basket.id
+            )
+            
+        except ObjectDoesNotExist:
+            anonymous_basket.user = user
+            anonymous_basket.save()
+            logger.info(
+                "Assigned user to basked id %d",anonymous_basket.id,
+            )
+            

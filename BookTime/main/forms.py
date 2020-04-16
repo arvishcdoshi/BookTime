@@ -7,8 +7,11 @@ from django.contrib.auth.forms import(
 from django.contrib.auth.forms import UsernameField
 from . import models
 from django.contrib.auth import authenticate
+from django.forms import inlineformset_factory
+from . import widgets
 
 logger = logging.getLogger(__name__)
+
 
 class ContactForm(forms.Form):
     name = forms.CharField(label='Your name', max_length=100)
@@ -79,3 +82,11 @@ class AuthenticationForm(forms.Form):
     def get_user(self):
         return self.user
             
+            
+BasketLineFormSet = inlineformset_factory(
+    models.Basket,
+    models.BasketLine,
+    fields = ("quantity",),
+    extra = 0,
+    widgets = {"quantity": widgets.PlusMinusNumberInput()},
+)            

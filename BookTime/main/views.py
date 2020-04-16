@@ -3,7 +3,7 @@ from main import forms
 #from django.shortcuts import render
 from main import models
 from django.views.generic.list import ListView
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404,render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 import logging
@@ -67,30 +67,6 @@ class ProductListView(ListView):
             
         return products.order_by("name")  
       
-# FOR FURTHER FUNCTIONALITY        
-def add_to_basket(request):
-    product = get_object_or_404(
-        models.Product, pk=request.GET.get("product_id")
-    )
-    basket = request.basket
-    if not request.basket:
-        if request.user.is_authenticated:
-            user = request.user
-        else:
-            user = None
-        basket = models.Basket.objects.create(user=user)
-        request.session["basket_id"] = basket.id                
-        
-    basketline,created = models.BasketLine.objects.get_or_create(
-        basket=basket, product=product
-    )   
-    if not created:
-        basketline.quantity += 1
-        basketline.save()
-        
-    return HttpResponseRedirect(
-        reverse("product", args=(product.slug))
-    )    
 
 class SignupView(FormView):
     template_name = "signup.html"
@@ -166,4 +142,47 @@ class AddressDeleteView(LoginRequiredMixin,DeleteView):
     
     def get_queryset(self):
         return self.model.objects.filter(user=self.request.user)
+
+def add_to_basket(request):
+    product = get_object_or_404(
+        models.Product, pk = request.GET.get("product_id")
         
+    )        
+    
+    basket = request.basket
+    if not request.basket:
+        if request.user.is_authenticated:
+            user = request.user
+            
+        else:
+            user = None
+        basket = models.Basket.objects.create(user=user)
+        request.session["basket_id"] = basket.id
+        
+    basketline, created = models.BasketLine.objects.get_or_create(basket=basket, product=product)
+    if not created:
+        basketline.quantity += 1
+        basketline.save()
+        
+    return HttpResponseRedirect(
+        reverse("product",args = (product.slug,))
+    )
+    
+    
+def manage_basket(request):
+    if not request.basket:
+        return render(request,"basket.html",{"formset":None})
+    
+    if request.method == "POST":
+        formset = forms.BasketLineFormSet(request.POST, instance=request.basket)
+        
+        if formset.is_valid():
+            formset.save()
+            
+    else:
+        formset = forms.BasketLineFormSet( instance=request.basket)
+                    
+    if request.basket.is_empty():
+        return render(request,"basket.html", {"formset":None})
+    
+    return render(request,"basket.html", {"formset": formset})                    
