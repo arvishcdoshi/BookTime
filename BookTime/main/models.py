@@ -316,4 +316,3 @@ class OrderLine(models.Model):
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     status = models.IntegerField(choices=STATUSES, default=NEW)
     objects = ActiveManager()
-    

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.views.generic import TemplateView
 from main import views
 from django.views.generic.detail import DetailView
@@ -50,6 +50,7 @@ urlpatterns = [
     
     path("order/done/", TemplateView.as_view(template_name="order_done.html"), name = "checkout_done", ),
     path("order/address_select/", views.AddressSelectionView.as_view(), name="address_select",),
+    
     
     
     # path("products/",
